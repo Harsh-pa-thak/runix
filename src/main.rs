@@ -1,3 +1,12 @@
+mod word_art;
+mod object_art;
+mod ai;
+mod cache {
+    pub mod local;
+    pub mod shared;
+}
+mod library;
+
 use clap::Parser;
 #[derive(Parser)]
 #[command(name = "runix")]
@@ -5,7 +14,7 @@ use clap::Parser;
 struct Cli {
     word: String,
 
-    #[arg(long, default_value = "false")]
+    #[arg(long)]
     art: bool,
 }
 
