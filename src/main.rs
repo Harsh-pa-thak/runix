@@ -8,12 +8,14 @@ mod cache {
 mod library;
 
 use clap::Parser;
+
 #[derive(Parser)]
-#[command(name = "runix")]
-#[command(about = "Terminal Is Looking Good")]
+#[command(name = "runix", about = "Cast ASCII spells in your terminal 🧙")]
 struct Cli {
+    /// The word to render
     word: String,
 
+    /// Generate object ASCII art (4-layer cache pipeline)
     #[arg(long)]
     art: bool,
 }
@@ -21,10 +23,8 @@ struct Cli {
 fn main() {
     let cli = Cli::parse();
     if cli.art {
-        println!(" the word is art  {}", cli.word);
+        object_art::render(&cli.word);
+    } else {
+        word_art::render(&cli.word);
     }
-    else{
-        println!("the word is {}", cli.word);
-    }
-
 }
