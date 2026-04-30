@@ -16,7 +16,6 @@ struct Cli {
 
     #[arg(long, short = 'a', alias = "a")]
     art: bool,
-    
 }
 
 fn main() {
