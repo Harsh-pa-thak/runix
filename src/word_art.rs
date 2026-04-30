@@ -3,9 +3,10 @@ use colored::Colorize;
 const LETTER_HEIGHT: usize = 6;
 
 // Returns a 6-row ASCII block for each supported character.
-// Each row is padded to a fixed width with a trailing space for letter spacing.
+// Every arm MUST have exactly 6 elements — enforced by the return type [&'static str; 6].
 fn get_letter(c: char) -> [&'static str; 6] {
     match c {
+        // ── Letters ──────────────────────────────────────────────────────────
         'A' => [
             "  ___  ",
             " / _ \\ ",
@@ -35,7 +36,7 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "|  _ \\ ",
             "| | | |",
             "| | | |",
-            "|_____/ ",
+            "|____/ ",
             "       ",
         ],
         'E' => [
@@ -87,12 +88,12 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "       ",
         ],
         'K' => [
-            " _  __",
-            "| |/ /",
-            "| ' / ",
-            "| . \\ ",
-            "| |\\ \\",
-            "|_| \\_\\",
+            " _  __ ",
+            "| |/ / ",
+            "| ' /  ",
+            "| . \\  ",
+            "| |\\ \\ ",
+            "|_| \\_|",
         ],
         'L' => [
             " _     ",
@@ -139,16 +140,16 @@ fn get_letter(c: char) -> [&'static str; 6] {
             " / _ \\ ",
             "| | | |",
             "| |_| |",
-            " \\__\\",
+            " \\__\\ \\",
             "       ",
         ],
         'R' => [
             " ____  ",
-            "|  _ \ ",
+            "|  _ \\ ",
             "| |_) |",
-            "|  __/ ",
-            "| | \\ ",
-            "|_|  \\",
+            "|  _ < ",
+            "| |_) |",
+            "|____/ ",
         ],
         'S' => [
             " ____  ",
@@ -183,48 +184,50 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "       ",
         ],
         'W' => [
-            "__     __        __ ",
-            "\\     //\\      // ",
-            " \\   //  \\    // ",
-            "  \\  //   \\  // ",
-            "   \\/      \\// ",
-            "              " 
+            "__    __ ",
+            "\\ \\  / /",
+            " \\ \\/ / ",
+            "  \\  /  ",
+            "  _\\/   ",
+            "        ",
         ],
         'X' => [
-            "__  __",
-            "\\ \\/ /",
-            " \\  / ",
-            " /  \\ ",
-            "/_/\\_\\",
-            "      ",
+            "__  __ ",
+            "\\ \\/ / ",
+            " \\  /  ",
+            " /  \\  ",
+            "/_/\\_\\ ",
+            "       ",
         ],
         'Y' => [
             "__   __",
             "\\ \\ / /",
             " \\ V / ",
-            "  \\ /  ",
-            "   ||  ",
-            "  _||_  ",
+            "  \\|/  ",
+            "   |   ",
+            "  _|_  ",
         ],
         'Z' => [
-            " ____  ",
+            " _____ ",
             "|__  / ",
             "  / /  ",
-            " / /_  ",
-            "/____|  ",
+            " / /   ",
+            "/___|  ",
             "       ",
         ],
+
+        // ── Digits ───────────────────────────────────────────────────────────
         '0' => [
             "  ___  ",
             " / _ \\ ",
-            "| | | |",
+            "| |/| |",   // slash in the middle to distinguish from O
             "| |_| |",
             " \\___/ ",
             "       ",
         ],
         '1' => [
-            "  _ ",
-            " / |",
+            " __ ",
+            "/_ |",
             " | |",
             " | |",
             " |_|",
@@ -263,10 +266,10 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "       ",
         ],
         '6' => [
-            "  __   ",
-            " / /_  ",
-            "| '_ \\ ",
-            "| (_) |",
+            "  ___  ",
+            " / /   ",
+            "| (_)  ",
+            "| |_) |",
             " \\___/ ",
             "       ",
         ],
@@ -294,6 +297,8 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "   /_/ ",
             "       ",
         ],
+
+        // ── Symbols ──────────────────────────────────────────────────────────
         ' ' => [
             "    ",
             "    ",
@@ -306,9 +311,7 @@ fn get_letter(c: char) -> [&'static str; 6] {
             " _ ",
             "| |",
             "| |",
-            "| |",
             "|_|",
-            "   ",
             "(_)",
             "   ",
         ],
@@ -328,6 +331,14 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "(_)",
             "   ",
         ],
+        ',' => [
+            "   ",
+            "   ",
+            "   ",
+            " _ ",
+            "( )",
+            " / ",
+        ],
         '-' => [
             "      ",
             "      ",
@@ -335,6 +346,94 @@ fn get_letter(c: char) -> [&'static str; 6] {
             "|____|",
             "      ",
             "      ",
+        ],
+        '_' => [
+            "       ",
+            "       ",
+            "       ",
+            "       ",
+            " _____ ",
+            "|_____|",
+        ],
+        ':' => [
+            "   ",
+            " _ ",
+            "(_)",
+            " _ ",
+            "(_)",
+            "   ",
+        ],
+        '@' => [
+            "  ____  ",
+            " / __ \\ ",
+            "| / _` |",
+            "| \\__,_|",
+            " \\____/ ",
+            "        ",
+        ],
+        '#' => [
+            " _  _  ",
+            "| || | ",
+            "|_||_| ",
+            "| || | ",
+            "|_||_| ",
+            "       ",
+        ],
+        '&' => [
+            "  ___   ",
+            " ( _ )  ",
+            " / _ \\  ",
+            "| (_) | ",
+            " \\___/& ",
+            "        ",
+        ],
+        '*' => [
+            "  _  ",
+            "\\|/  ",
+            " *   ",
+            "/|\\  ",
+            "     ",
+            "     ",
+        ],
+        '+' => [
+            "    ",
+            " _  ",
+            "| | ",
+            "|_| ",
+            "    ",
+            "    ",
+        ],
+        '/' => [
+            "    / ",
+            "   /  ",
+            "  /   ",
+            " /    ",
+            "/     ",
+            "      ",
+        ],
+        '\\' => [
+            "\\     ",
+            " \\    ",
+            "  \\   ",
+            "   \\  ",
+            "    \\ ",
+            "      ",
+        ],
+        '(' => [
+            "  _ ",
+            " / |",
+            "| | ",
+            "| | ",
+            " \\_|",
+            "    ",
+        ],
+        ')' => [
+            " _  ",
+            "| \\ ",
+            " | |",
+            " | |",
+            "|_/ ",
+            "    ",
         ],
         _ => [
             "  _  ",
@@ -356,22 +455,21 @@ pub fn render(word: &str) {
     let upper = word.to_uppercase();
     let chars: Vec<char> = upper.chars().collect();
 
-    // Collect all letter blocks
+    // Collect letter blocks — each is exactly [&str; 6]
     let letter_blocks: Vec<[&'static str; 6]> = chars.iter().map(|&c| get_letter(c)).collect();
 
-    // Zip them row by row and print
-    let mut output_rows: Vec<String> = Vec::with_capacity(LETTER_HEIGHT);
+    // Combine row by row
     for row in 0..LETTER_HEIGHT {
-        let combined: String = letter_blocks.iter().map(|block| block[row]).collect::<Vec<_>>().join(" ");
-        output_rows.push(combined);
-    }
+        let line: String = letter_blocks
+            .iter()
+            .map(|block| block[row])
+            .collect::<Vec<_>>()
+            .join(" ");
 
-    // Trim trailing blank rows
-    while output_rows.last().map_or(false, |r: &String| r.trim().is_empty()) {
-        output_rows.pop();
-    }
-
-    for row in &output_rows {
-        println!("{}", row.white().bold());
+        // Skip trailing fully-blank rows
+        if row == LETTER_HEIGHT - 1 && line.trim().is_empty() {
+            continue;
+        }
+        println!("{}", line.white().bold());
     }
 }
