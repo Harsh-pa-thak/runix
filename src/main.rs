@@ -14,7 +14,7 @@ use clap::Parser;
 struct Cli {
     word: String,
 
-    #[arg(long, short = 'a')]
+    #[arg(long, short = 'a', alias = "a")]
     art: bool,
     
 }
