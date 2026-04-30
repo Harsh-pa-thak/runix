@@ -16,11 +16,13 @@ struct Cli {
 
     #[arg(long)]
     art: bool,
+    a:bool,
+    
 }
 
 fn main() {
     let cli = Cli::parse();
-    if cli.art {
+    if cli.art || cli.a {
         object_art::render(&cli.word);
     } else {
         word_art::render(&cli.word);
