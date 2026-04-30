@@ -12,10 +12,8 @@ use clap::Parser;
 #[derive(Parser)]
 #[command(name = "runix", about = "Cast ASCII spells in your terminal 🧙")]
 struct Cli {
-    /// The word to render
     word: String,
 
-    /// Generate object ASCII art (4-layer cache pipeline)
     #[arg(long)]
     art: bool,
 }

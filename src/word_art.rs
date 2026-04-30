@@ -7,7 +7,6 @@ pub fn render(word: &str) {
         return;
     }
 
-    // Load the built-in standard figlet font (bundled inside the crate, no file needed)
     let font = FIGfont::standard().expect("Built-in standard font should always load");
 
     match font.convert(word) {

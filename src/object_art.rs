@@ -8,6 +8,6 @@ pub fn render(word: &str) {
 
     println!(
         "{}",
-        format!("'{}' not in library yet — cache/AI pipeline coming in Phase 4+", word).yellow()
+        format!("'{}' not in library yet", word).yellow()
     );
 }
