@@ -1,5 +1,5 @@
 use colored::Colorize;
-use figlet_rs::FIGlet;
+use figlet_rs::FIGfont;
 
 pub fn render(word: &str) {
     if word.is_empty() {
@@ -7,8 +7,8 @@ pub fn render(word: &str) {
         return;
     }
 
-    // Load the built-in "standard" figlet font (no font file required)
-    let font = FIGlet::standard().expect("Built-in standard font should always load");
+    // Load the built-in standard figlet font (bundled inside the crate, no file needed)
+    let font = FIGfont::standard().expect("Built-in standard font should always load");
 
     match font.convert(word) {
         Some(figure) => {
@@ -17,7 +17,6 @@ pub fn render(word: &str) {
             }
         }
         None => {
-            // Fallback: just print the word uppercased if figlet can't render it
             eprintln!("{}", format!("Could not render: {}", word).red());
         }
     }
