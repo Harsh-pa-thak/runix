@@ -14,15 +14,14 @@ use clap::Parser;
 struct Cli {
     word: String,
 
-    #[arg(long)]
+    #[arg(long, short = 'a')]
     art: bool,
-    a:bool,
     
 }
 
 fn main() {
     let cli = Cli::parse();
-    if cli.art || cli.a {
+    if cli.art {
         object_art::render(&cli.word);
     } else {
         word_art::render(&cli.word);
