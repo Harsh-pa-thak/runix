@@ -2,6 +2,12 @@
 
 `runix` is a blazing fast CLI tool that allows you to cast ASCII spells directly in your terminal. Whether you want to generate high-quality ASCII word art or render classic ASCII illustrations, `runix` has you covered.
 
+## Installation
+
+```bash
+cargo install runix-cli
+```
+
 ## Usage
 
 Generate standard word art:
