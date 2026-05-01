@@ -1,5 +1,5 @@
 [package]
-name = "runix"
+name = "runix-cli"
 version = "0.1.0"
 edition = "2021"
 authors = ["Harsh Pathak <[harphy45@gmail.com]>"]
@@ -10,6 +10,10 @@ homepage = "https://github.com/Harsh-pa-thak/runix"
 readme = "README.md"
 keywords = ["ascii", "art", "cli", "terminal"]
 categories = ["command-line-utilities"]
+
+[[bin]]
+name = "runix"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
