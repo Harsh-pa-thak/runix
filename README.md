@@ -15,7 +15,7 @@ Generate standard word art:
 runix "Hello"
 ```
 
-Render illustrations from the built-in library using the `--art` (or `-a`, `--a`) flag:
+Render illustrations from the built-in library using the `--art` (or `-a`) flag:
 ```bash
 runix wolf -a
 runix ghost --art
