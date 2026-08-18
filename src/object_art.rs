@@ -7,6 +7,11 @@ pub fn render(word: &str) {
         println!("{}", art.green());
         return;
     }
+    if let Some(art) = crate::cache::local::get(word, "object") {
+        println!("{}", art.green());
+        println!("{}", "💾 Source: Local Cache".dimmed());
+        return;
+    }
 
     let spinner = ProgressBar::new_spinner();
 
@@ -23,8 +28,9 @@ pub fn render(word: &str) {
     match crate::ai::generate(word, "object") {
         Ok(art) => {
             spinner.finish_and_clear();
-            println!("{}", art);
-            println!("ai result");
+            crate::cache::local::set(word, "object", &art);
+            println!("{}", art.green());
+            println!("{}", "🤖 Source: AI Generated".dimmed());
         }
         Err(err) => {
             spinner.finish_and_clear();
