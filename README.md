@@ -15,12 +15,22 @@ Generate standard word art:
 runix "Hello"
 ```
 
-Render illustrations from the built-in library using the `--art` (or `-a`) flag:
+Render illustrations using the `--art` (or `-a`) flag:
 ```bash
 runix wolf -a
 runix ghost --art
-runix dragon --a
+runix spaceship -a
 ```
+
+---
+
+## ⚡ How It Works: Built-in + AI + Smart Caching
+
+`runix` uses an intelligent multi-layer pipeline to give you instant art every time:
+
+1. **Built-in Library**: Comes pre-compiled with **80+ classic ASCII illustrations** for instant nanosecond lookups.
+2. **Groq AI Generation**: If a word isn't in the library, `runix` casts an AI spell using Groq to generate custom ASCII art on the fly.
+3. **Generate Once, Use Many (Local Cache)**: Any AI-generated art is automatically saved to your local disk (`~/.runix/cache.json`). Subsequent calls load instantly from your local cache with zero network wait!
 
 ---
 
@@ -28,7 +38,7 @@ runix dragon --a
 
 `runix` comes pre-compiled with a curated library of over 80+ classic ASCII art pieces, sourced from the public domain. 
 
-Here are all the available spells you can cast:
+Here are all the available built-in spells you can cast:
 
 ### Animals (26)
 `cat`, `kitten`, `dog`, `cow`, `unicorn`, `turtle`, `butterfly`, `whale`, `elephant`, `wolf`, `bear`, `fish`, `shark`, `bird`, `eagle`, `penguin`, `snail`, `spider`, `rabbit`, `possum`, `kangaroo`, `bat`, `owl`, `snake`, `dragon`, `scorpion`
