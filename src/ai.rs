@@ -29,30 +29,35 @@ pub fn generate(word: &str, _mode: &str) -> anyhow::Result<String> {
         .timeout(std::time::Duration::from_secs(12))
         .build()?;
 
-    let system_prompt = "You are an expert ASCII artist for terminal applications.\n\
-                         Your goal is to draw clear, recognizable, iconic ASCII art using standard characters (/ \\ | _ - ( ) < > * # = @ +).\n\
-                         CRITICAL RULES:\n\
-                         1. Output ONLY the raw ASCII art diagram.\n\
-                         2. Do NOT use markdown code fences (no ```), no titles, no explanations.\n\
-                         3. Keep width under 50 characters and height between 6 to 12 lines.\n\
-                         4. Capture key iconic features of the object so it is instantly recognizable.";
-
+    let system_prompt = "You are a professional ASCII artist specializing in clean terminal ASCII art.\n\
+                     Create a visually accurate and recognizable ASCII representation of the requested object.\n\
+                     CRITICAL RULES:\n\
+                     1. Output ONLY the ASCII artwork. No explanation, title, or Markdown.\n\
+                     2. Never use code fences.\n\
+                     3. Use spaces and ASCII characters freely to create the shape.\n\
+                     4. Keep the artwork between 6 and 14 lines tall.\n\
+                     5. Keep the artwork under 50 characters wide.\n\
+                     6. Preserve symmetry when the object naturally has symmetry.\n\
+                     7. Focus on the object's most distinctive visual features.\n\
+                     8. Use multiple levels of detail rather than making a simple symbol.\n\
+                     9. Make every line intentionally contribute to the shape.\n\
+                     10. Do not draw a generic representation; make the requested object immediately recognizable.";
     let user_prompt = format!("Draw recognizable ASCII art of: {}", word);
 
     let body = json!({
-        "model": "llama-3.3-70b-versatile",
-        "temperature": 0.4,
-        "messages": [
-            {
-                "role": "system",
-                "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content": user_prompt
-            }
-        ]
-    });
+   "model": "openai/gpt-oss-20b",
+    "temperature": 0.4,
+    "messages": [
+        {
+            "role": "system",
+            "content": system_prompt
+        },
+        {
+            "role": "user",
+            "content": user_prompt
+        }
+    ]
+});
 
     let res = client
         .post("https://api.groq.com/openai/v1/chat/completions")
