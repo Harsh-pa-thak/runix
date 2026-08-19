@@ -20,11 +20,13 @@ fn clean_ascii_art(raw: &str) -> String {
 }
 
 pub fn generate(word: &str, _mode: &str) -> anyhow::Result<String> {
-    let _ = dotenvy::dotenv();
-
-    let api_key = std::env::var("GROQ_KEY")
-        .map_err(|_| anyhow::anyhow!("GROQ_KEY not found in environment or .env file"))?;
-
+    let api_key = crate::config::get_key().ok_or_else(|| {
+        anyhow::anyhow!(
+            "GROQ API key not found!\n\
+             Get a free API key at https://console.groq.com\n\
+             Then set it with: runix --set-key <YOUR_GROQ_KEY>"
+        )
+    })?;
     let client = reqwest::blocking::Client::builder()
         .timeout(std::time::Duration::from_secs(12))
         .build()?;
