@@ -24,7 +24,7 @@ runix spaceship -a
 
 ---
 
-## ⚡ How It Works: Built-in + AI + Smart Caching
+## How It Works: Built-in + AI + Smart Caching
 
 `runix` uses an intelligent multi-layer pipeline to give you instant art every time:
 
