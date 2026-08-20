@@ -9,7 +9,7 @@ pub fn render(word: &str) {
     }
     if let Some(art) = crate::cache::local::get(word, "object") {
         println!("{}", art.green());
-        println!("{}", "💾 Source: Local Cache".dimmed());
+       // println!("{}", "Source: Local Cache".dimmed());
         return;
     }
 
@@ -22,7 +22,7 @@ pub fn render(word: &str) {
             .unwrap(),
     );
 
-    spinner.set_message("hold your shit hacker runix is on work for");
+    spinner.set_message("hold your shit runix on work");
     spinner.enable_steady_tick(Duration::from_millis(1000));
 
     match crate::ai::generate(word, "object") {
@@ -30,7 +30,7 @@ pub fn render(word: &str) {
             spinner.finish_and_clear();
             crate::cache::local::set(word, "object", &art);
             println!("{}", art.green());
-            println!("{}", "🤖 Source: AI Generated".dimmed());
+            //println!("{}", "Source: AI".dimmed());
         }
         Err(err) => {
             spinner.finish_and_clear();
