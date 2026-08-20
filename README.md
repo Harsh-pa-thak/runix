@@ -25,13 +25,17 @@ runix spaceship -a
 ---
 
 ## How It Works: Built-in + AI + Smart Caching
+Once downloaded the user need to set the local <a href="https://console.groq.com/keys">groq</a> api key.
 
+```
+runix --set-key <your api key>
+```
 `runix` uses an intelligent multi-layer pipeline to give you instant art every time:
 
 1. **Built-in Library**: Comes pre-compiled with **80+ classic ASCII illustrations** for instant nanosecond lookups.
 2. **Groq AI Generation**: If a word isn't in the library, `runix` casts an AI spell using Groq to generate custom ASCII art on the fly.
 3. **Generate Once, Use Many (Local Cache)**: Any AI-generated art is automatically saved to your local disk (`~/.runix/cache.json`). Subsequent calls load instantly from your local cache with zero network wait!
-
+4. **Key Security**: The key is securely stored locally  (`~/.runix/config.json`) in this file.
 ---
 
 ## The runix Art Library
