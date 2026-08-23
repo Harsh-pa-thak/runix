@@ -30,7 +30,6 @@ pub fn render(word: &str) {
             spinner.finish_and_clear();
             crate::cache::local::set(word, "object", &art);
             println!("{}", art.green());
-            //println!("{}", "Source: AI".dimmed());
         }
         Err(err) => {
             spinner.finish_and_clear();

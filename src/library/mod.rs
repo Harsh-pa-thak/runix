@@ -2,6 +2,63 @@
 // All art sourced from "Best Of The ASCII Pics" public domain collection.
 // Lookup is a case-insensitive match on word. Zero latency, zero network.
 
+pub fn print_catalog() {
+    let animals = vec![
+        "cat", "kitten", "dog", "cow", "unicorn", "turtle", "butterfly", "whale",
+        "elephant", "wolf", "bear", "fish", "shark", "bird", "eagle", "penguin",
+        "snail", "spider", "rabbit", "possum", "kangaroo", "bat", "owl", "snake",
+        "dragon", "scorpion",
+    ];
+
+    let nature = vec![
+        "sun", "moon", "mountain", "tree", "pine", "flower", "wave", "rose",
+        "snowman", "leaf", "mushroom", "cactus",
+    ];
+
+    let celestial = vec![
+        "planet", "earth", "saturn", "star", "shooting-star", "ufo", "comet",
+    ];
+
+    let objects = vec![
+        "house", "castle", "rocket", "car", "train", "ship", "plane", "helicopter",
+        "sword", "crown", "heart", "skull", "shield", "key", "lock", "book", "clock",
+        "hourglass", "trophy", "lantern", "lamp", "coffee", "cup", "pizza", "bomb",
+        "fire", "flame", "lightning", "bolt", "thunder", "anchor", "diamond", "ghost",
+        "robot", "alien", "snowflake", "dna", "helix", "atom", "guitar", "music",
+        "note", "chess", "pawn", "target", "maze", "compass", "flag",
+        "heart2", "love", "ship2", "galleon", "crown2", "king",
+    ];
+
+    let fantasy = vec![
+        "wizard", "angel", "santa", "pirate",
+    ];
+
+    let scenes = vec![
+        "ocean", "sea", "forest", "campfire",
+    ];
+
+    let sci_fi = vec![
+        "enterprise", "starship",
+    ];
+
+    let categories = vec![
+        ("Animals", animals),
+        ("Nature", nature),
+        ("Celestial", celestial),
+        ("Objects", objects),
+        ("Fantasy", fantasy),
+        ("Scenes", scenes),
+        ("Sci-Fi", sci_fi),
+    ];
+
+    for (category, items) in categories {
+        println!("\n=== {} ===", category);
+
+        for item in items {
+            println!("  {}", item);
+        }
+    }
+}
 pub fn lookup(word: &str) -> Option<&'static str> {
     match word.to_lowercase().as_str() {
 
