@@ -25,6 +25,8 @@ struct Cli {
 
     #[arg(short, long)]
     list: bool,
+    #[arg(short, long, default_value = "green")]
+    color: String,
 
     word: Option<String>,
 }
@@ -44,6 +46,7 @@ fn main() {
         library::print_catalog();
         return;
     }
+
     if cli.random{
         if cli.random {
             use rand::seq::SliceRandom;
@@ -51,7 +54,7 @@ fn main() {
             let mut rng = rand::thread_rng();
             if let Some(&spell) = spells.choose(&mut rng) {
                 println!("{}", format!("generating a random art : '{}'", spell).green().bold());
-                object_art::render(spell);
+                object_art::render(spell,&cli.color);
             }
             return;
         }
@@ -68,7 +71,7 @@ fn main() {
     }
 
     if cli.art {
-        object_art::render(&word);
+        object_art::render(&word,&cli.color);
     } else {
         word_art::render(&word);
     }
