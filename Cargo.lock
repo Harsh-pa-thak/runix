@@ -1276,6 +1276,7 @@ dependencies = [
  "figlet-rs",
  "groqai",
  "indicatif",
+ "rand",
  "redis",
  "reqwest",
  "serde",

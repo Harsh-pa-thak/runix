@@ -9,12 +9,16 @@ mod library;
 mod config;
 
 use clap::Parser;
+use colored::Colorize;
 
 #[derive(Parser)]
 #[command(name = "runix", about = "Cast ASCII spells in your terminal")]
 struct Cli {
     #[arg(short, long)]
     art: bool,
+
+    #[arg(short, long)]
+    random: bool,
 
     #[arg(long)]
     set_key: Option<String>,
@@ -39,6 +43,18 @@ fn main() {
     if cli.list {
         library::print_catalog();
         return;
+    }
+    if cli.random{
+        if cli.random {
+            use rand::seq::SliceRandom;
+            let spells = library::list_all();
+            let mut rng = rand::thread_rng();
+            if let Some(&spell) = spells.choose(&mut rng) {
+                println!("{}", format!("generating a random art : '{}'", spell).green().bold());
+                object_art::render(spell);
+            }
+            return;
+        }
     }
 
     let word = cli.word.unwrap_or_default();
