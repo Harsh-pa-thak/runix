@@ -47,17 +47,15 @@ fn main() {
         return;
     }
 
-    if cli.random{
-        if cli.random {
-            use rand::seq::SliceRandom;
-            let spells = library::list_all();
-            let mut rng = rand::thread_rng();
-            if let Some(&spell) = spells.choose(&mut rng) {
-                println!("{}", format!("generating a random art : '{}'", spell).green().bold());
-                object_art::render(spell,&cli.color);
-            }
-            return;
+    if cli.random {
+        use rand::seq::SliceRandom;
+        let spells = library::list_all();
+        let mut rng = rand::thread_rng();
+        if let Some(&spell) = spells.choose(&mut rng) {
+            println!("{}", format!("generating a random art : '{}'", spell).green().bold());
+            object_art::render(spell, &cli.color);
         }
+        return;
     }
 
     let word = cli.word.unwrap_or_default();
