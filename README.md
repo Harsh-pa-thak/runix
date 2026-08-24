@@ -21,41 +21,30 @@ runix wolf -a
 runix ghost --art
 runix spaceship -a
 ```
-
-Render art with custom colors (`-c` or `--color`):
+Render illustrations in custom color using the `--color` (or `-c`) flag:
 ```bash
-runix dragon -a -c red
-runix wave -a -c cyan
-runix sun -a -c yellow
+runix wolf -a -c red
+runix ghost --art --color yellow
+runix spaceship -a -c brown
 ```
-
-List all built-in spells by category (`-l` or `--list`):
-```bash
-runix -l
-```
-
-Cast a random ASCII spell from the library (`-r` or `--random`):
+Render random illustrations using the `--random` (or `-r`) flag:
 ```bash
 runix -r
 ```
-
 ---
 
-## ⚡ How It Works: Built-in + AI + Smart Caching
+## How It Works: Built-in + AI + Caching
+Once downloaded the user need to set the local <a href="https://console.groq.com/keys">groq</a> api key.
 
-To enable AI art generation for unknown words, set your free [Groq API Key](https://console.groq.com/keys):
-
-```bash
-runix --set-key <your_groq_api_key>
 ```
-
+runix --set-key <your api key>
+```
 `runix` uses an intelligent multi-layer pipeline to give you instant art every time:
 
 1. **Built-in Library**: Comes pre-compiled with **80+ classic ASCII illustrations** for instant nanosecond lookups.
 2. **Groq AI Generation**: If a word isn't in the library, `runix` casts an AI spell using Groq to generate custom ASCII art on the fly.
 3. **Generate Once, Use Many (Local Cache)**: Any AI-generated art is automatically saved to your local disk (`~/.runix/cache.json`). Subsequent calls load instantly from your local cache with zero network wait!
-4. **Key Security**: The key is securely stored locally (`~/.runix/config.json`).
-
+4. **Key Security**: The key is securely stored locally  (`~/.runix/config.json`) in this file.
 ---
 
 ## The runix Art Library
