@@ -1,65 +1,60 @@
+//! AI fallback (Layer 4): Groq chat completions, tuned for minimum latency.
+
 use anyhow::bail;
 use serde_json::json;
+use std::time::Duration;
 
-fn clean_ascii_art(raw: &str) -> String {
-    let cleaned = raw
-        .trim()
-        .strip_prefix("```ascii")
-        .or_else(|| raw.trim().strip_prefix("```"))
-        .unwrap_or(raw)
-        .strip_suffix("```")
-        .unwrap_or(raw)
-        .trim();
+/// `openai/gpt-oss-20b` is Groq's fastest production model (~1000 tok/s).
+/// `reasoning_effort: low` is the key to fast art: at the default effort the
+/// model burns its whole token budget reasoning and often returns nothing.
+const MODEL: &str = "openai/gpt-oss-20b";
+const REASONING_EFFORT: &str = "low";
 
-    cleaned
-        .lines()
-        .take(12)
-        .filter(|line| line.chars().all(|c| c.is_ascii()))
-        .collect::<Vec<&str>>()
-        .join("\n")
-}
+/// Art is capped at ~14 lines x ~60 columns, so 700 tokens is generous headroom.
+const MAX_COMPLETION_TOKENS: u32 = 700;
 
-pub fn generate(word: &str, _mode: &str) -> anyhow::Result<String> {
+const TIMEOUT: Duration = Duration::from_secs(10);
+
+pub fn generate(word: &str) -> anyhow::Result<String> {
     let api_key = crate::config::get_key().ok_or_else(|| {
         anyhow::anyhow!(
-            "GROQ API key not found!\n\
-             Get a free API key at https://console.groq.com\n\
-             Then set it with: runix --set-key <YOUR_GROQ_KEY>"
+            "no Groq API key found\n \
+             grab a free key at https://console.groq.com/keys\n  \
+             then run: runix --set-key <YOUR_GROQ_KEY>"
         )
     })?;
+
+    // Ask the AI for art that fits the current terminal.
+    let width = crate::fit::art_width_budget();
+    let height = crate::fit::art_height_budget();
+
     let client = reqwest::blocking::Client::builder()
-        .timeout(std::time::Duration::from_secs(12))
+        .timeout(TIMEOUT)
+        .tcp_nodelay(true)
         .build()?;
 
-    let system_prompt = "You are a professional ASCII artist specializing in clean terminal ASCII art.\n\
-                     Create a visually accurate and recognizable ASCII representation of the requested object.\n\
-                     CRITICAL RULES:\n\
-                     1. Output ONLY the ASCII artwork. No explanation, title, or Markdown.\n\
-                     2. Never use code fences.\n\
-                     3. Use spaces and ASCII characters freely to create the shape.\n\
-                     4. Keep the artwork between 6 and 14 lines tall.\n\
-                     5. Keep the artwork under 50 characters wide.\n\
-                     6. Preserve symmetry when the object naturally has symmetry.\n\
-                     7. Focus on the object's most distinctive visual features.\n\
-                     8. Use multiple levels of detail rather than making a simple symbol.\n\
-                     9. Make every line intentionally contribute to the shape.\n\
-                     10. Do not draw a generic representation; make the requested object immediately recognizable.";
-    let user_prompt = format!("Draw recognizable ASCII art of: {}", word);
-
     let body = json!({
-   "model": "openai/gpt-oss-20b",
-    "temperature": 0.4,
-    "messages": [
-        {
-            "role": "system",
-            "content": system_prompt
-        },
-        {
-            "role": "user",
-            "content": user_prompt
-        }
-    ]
-});
+        "model": MODEL,
+        "reasoning_effort": REASONING_EFFORT,
+        "temperature": 0.5,
+        "max_completion_tokens": MAX_COMPLETION_TOKENS,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a professional ASCII artist. Reply with the finished artwork and nothing else: no words, no markdown fences, no non-ASCII characters."
+            },
+            {
+                "role": "user",
+                "content": format!(
+                    "Draw recognizable ASCII art of: {word}\n\
+                     Hard limits (the terminal is only {width} columns by {height} rows):\n\
+                     - at most {width} characters per line\n\
+                     - at most {height} lines\n\
+                     - make the object immediately recognizable, preserve symmetry, use varied detail"
+                )
+            }
+        ]
+    });
 
     let res = client
         .post("https://api.groq.com/openai/v1/chat/completions")
@@ -69,19 +64,76 @@ pub fn generate(word: &str, _mode: &str) -> anyhow::Result<String> {
         .send()?;
 
     if !res.status().is_success() {
+        let status = res.status();
         let err_text = res.text().unwrap_or_default();
-        bail!("Groq API error: {}", err_text);
+        bail!("Groq API error ({}): {}", status, err_text);
     }
 
     let json_res: serde_json::Value = res.json()?;
     let content = json_res["choices"][0]["message"]["content"]
         .as_str()
-        .ok_or_else(|| anyhow::anyhow!("Failed to parse response content from Groq"))?;
+        .ok_or_else(|| anyhow::anyhow!("failed to parse Groq response"))?;
 
-    let art = clean_ascii_art(content);
+    let art = clean_ascii_art(content, height);
     if art.is_empty() {
-        bail!("Generated art was empty or invalid");
+        bail!("generated art was empty or invalid");
     }
 
     Ok(art)
+}
+
+/// Strips accidental code fences, drops non-ASCII lines, trims blank edges
+/// and caps the result to the terminal height budget.
+fn clean_ascii_art(raw: &str, max_lines: usize) -> String {
+    let mut s = raw.trim();
+    if let Some(rest) = s.strip_prefix("```") {
+        s = rest
+            .strip_prefix("ascii")
+            .or_else(|| rest.strip_prefix("text"))
+            .unwrap_or(rest);
+        if let Some(rest) = s.strip_suffix("```") {
+            s = rest;
+        }
+    }
+
+    let lines: Vec<&str> = s
+        .lines()
+        .map(str::trim_end)
+        .filter(|line| line.is_ascii())
+        .collect();
+
+    let first = lines.iter().position(|l| !l.trim().is_empty()).unwrap_or(0);
+    let last = lines
+        .iter()
+        .rposition(|l| !l.trim().is_empty())
+        .map_or(first, |i| i + 1);
+
+    lines[first..last.min(first + max_lines)].join("\n")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn strips_markdown_fences() {
+        let raw = "```ascii\n  /\\_/\\\n ( o.o )\n  =^= \n```";
+        assert_eq!(clean_ascii_art(raw, 14), "  /\\_/\\\n ( o.o )\n  =^=");
+    }
+
+    #[test]
+    fn drops_non_ascii_lines() {
+        let raw = "  /\\_/\\  ✨\n ( o.o )\n  =^= ";
+        assert_eq!(clean_ascii_art(raw, 14), " ( o.o )\n  =^=");
+    }
+
+    #[test]
+    fn caps_height() {
+        assert_eq!(clean_ascii_art("a\nb\nc", 2), "a\nb");
+    }
+
+    #[test]
+    fn empty_junk_is_empty() {
+        assert_eq!(clean_ascii_art("```\n```", 14), "");
+    }
 }

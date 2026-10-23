@@ -2,62 +2,56 @@
 // All art sourced from "Best Of The ASCII Pics" public domain collection.
 // Lookup is a case-insensitive match on word. Zero latency, zero network.
 
+/// Single source of truth for the built-in catalog (used by `-l` and `-r`).
+pub const CATALOG: &[(&str, &[&str])] = &[
+    (
+        "Animals",
+        &[
+            "cat", "kitten", "dog", "cow", "unicorn", "turtle", "butterfly", "whale",
+            "elephant", "wolf", "bear", "fish", "shark", "bird", "eagle", "penguin",
+            "snail", "spider", "rabbit", "possum", "kangaroo", "bat", "owl", "snake",
+            "dragon", "scorpion",
+        ],
+    ),
+    (
+        "Nature",
+        &[
+            "sun", "moon", "mountain", "tree", "pine", "flower", "wave", "rose",
+            "snowman", "leaf", "mushroom", "cactus",
+        ],
+    ),
+    (
+        "Celestial",
+        &["planet", "earth", "saturn", "star", "shooting-star", "ufo", "comet"],
+    ),
+    (
+        "Objects",
+        &[
+            "house", "castle", "rocket", "car", "train", "ship", "plane", "helicopter",
+            "sword", "crown", "heart", "skull", "shield", "key", "lock", "book", "clock",
+            "hourglass", "trophy", "lantern", "lamp", "coffee", "cup", "pizza", "bomb",
+            "fire", "flame", "lightning", "bolt", "thunder", "anchor", "diamond", "ghost",
+            "robot", "alien", "snowflake", "dna", "helix", "atom", "guitar", "music",
+            "note", "chess", "pawn", "target", "maze", "compass", "flag", "heart2",
+            "love", "ship2", "galleon", "crown2", "king",
+        ],
+    ),
+    ("Fantasy", &["wizard", "angel", "santa", "pirate"]),
+    ("Scenes", &["ocean", "sea", "forest", "campfire"]),
+    ("Sci-Fi", &["enterprise", "starship"]),
+];
+
 pub fn print_catalog() {
-    let animals = vec![
-        "cat", "kitten", "dog", "cow", "unicorn", "turtle", "butterfly", "whale",
-        "elephant", "wolf", "bear", "fish", "shark", "bird", "eagle", "penguin",
-        "snail", "spider", "rabbit", "possum", "kangaroo", "bat", "owl", "snake",
-        "dragon", "scorpion",
-    ];
-
-    let nature = vec![
-        "sun", "moon", "mountain", "tree", "pine", "flower", "wave", "rose",
-        "snowman", "leaf", "mushroom", "cactus",
-    ];
-
-    let celestial = vec![
-        "planet", "earth", "saturn", "star", "shooting-star", "ufo", "comet",
-    ];
-
-    let objects = vec![
-        "house", "castle", "rocket", "car", "train", "ship", "plane", "helicopter",
-        "sword", "crown", "heart", "skull", "shield", "key", "lock", "book", "clock",
-        "hourglass", "trophy", "lantern", "lamp", "coffee", "cup", "pizza", "bomb",
-        "fire", "flame", "lightning", "bolt", "thunder", "anchor", "diamond", "ghost",
-        "robot", "alien", "snowflake", "dna", "helix", "atom", "guitar", "music",
-        "note", "chess", "pawn", "target", "maze", "compass", "flag",
-        "heart2", "love", "ship2", "galleon", "crown2", "king",
-    ];
-
-    let fantasy = vec![
-        "wizard", "angel", "santa", "pirate",
-    ];
-
-    let scenes = vec![
-        "ocean", "sea", "forest", "campfire",
-    ];
-
-    let sci_fi = vec![
-        "enterprise", "starship",
-    ];
-
-    let categories = vec![
-        ("Animals", animals),
-        ("Nature", nature),
-        ("Celestial", celestial),
-        ("Objects", objects),
-        ("Fantasy", fantasy),
-        ("Scenes", scenes),
-        ("Sci-Fi", sci_fi),
-    ];
-
-    for (category, items) in categories {
-        println!("\n=== {} ===", category);
-
-        for item in items {
+    for (category, items) in CATALOG {
+        println!("\n=== {} ({}) ===", category, items.len());
+        for item in items.iter() {
             println!("  {}", item);
         }
     }
+    println!(
+        "\n{} spells built in — `runix <word> -a` to cast one",
+        list_all().len()
+    );
 }
 pub fn lookup(word: &str) -> Option<&'static str> {
     match word.to_lowercase().as_str() {
@@ -1002,30 +996,8 @@ __________________           __
 }
 
 pub fn list_all() -> Vec<&'static str> {
-    vec![
-        // Animals
-        "cat", "kitten", "dog", "cow", "unicorn", "turtle", "butterfly", "whale",
-        "elephant", "wolf", "bear", "fish", "shark", "bird", "eagle", "penguin",
-        "snail", "spider", "rabbit", "possum", "kangaroo", "bat", "owl", "snake",
-        "dragon", "scorpion",
-        // Nature
-        "sun", "moon", "mountain", "tree", "pine", "flower", "wave", "rose",
-        "snowman", "leaf", "mushroom", "cactus",
-        // Celestial
-        "planet", "earth", "saturn", "star", "shooting-star", "ufo", "comet",
-        // Objects
-        "house", "castle", "rocket", "car", "train", "ship", "plane", "helicopter",
-        "sword", "crown", "heart", "skull", "shield", "key", "lock", "book", "clock",
-        "hourglass", "trophy", "lantern", "lamp", "coffee", "cup", "pizza", "bomb",
-        "fire", "flame", "lightning", "bolt", "thunder", "anchor", "diamond", "ghost",
-        "robot", "alien", "snowflake", "dna", "helix", "atom", "guitar", "music",
-        "note", "chess", "pawn", "target", "maze", "compass", "flag",
-        "heart2", "love", "ship2", "galleon", "crown2", "king",
-        // People / Fantasy
-        "wizard", "angel", "santa", "pirate",
-        // Scenes
-        "ocean", "sea", "forest", "campfire",
-        // Sci-Fi
-        "enterprise", "starship",
-    ]
+    CATALOG
+        .iter()
+        .flat_map(|(_, items)| items.iter().copied())
+        .collect()
 }
