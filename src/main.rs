@@ -17,27 +17,27 @@ use colored::Colorize;
 #[derive(Parser)]
 #[command(name = "runix", version, about = "Cast ASCII spells in your terminal 🧙‍♂️")]
 struct Cli {
-    /// Object illustration mode instead of big letter art
+
     #[arg(short, long)]
     art: bool,
 
-    /// Cast a random built-in spell
+
     #[arg(short, long)]
     random: bool,
 
-    /// Save your Groq API key for AI generation
+
     #[arg(long, value_name = "KEY")]
     set_key: Option<String>,
 
-    /// List all built-in spells
+
     #[arg(short, long)]
     list: bool,
 
-    /// Art color: red, blue, cyan, yellow, magenta, white, green
+
     #[arg(short, long, default_value = "green")]
     color: String,
 
-    /// The word to spell
+
     word: Option<String>,
 }
 
@@ -46,7 +46,7 @@ fn main() {
 
     if let Some(key) = cli.set_key {
         match config::save_key(&key) {
-            Ok(()) => println!("{}", "🔑 key saved to ~/.runix/config.json".green()),
+            Ok(()) => println!("{}", "Key saved to ~/.runix/config.json".green()),
             Err(e) => eprintln!("{}", format!("could not save key: {e:#}").red()),
         }
         return;
@@ -60,7 +60,7 @@ fn main() {
     if cli.random {
         let spells = library::list_all();
         let spell = spells[rand::random::<usize>() % spells.len()];
-        println!("{}", format!("🎲 random spell: '{spell}'").green().bold());
+        println!("{}", format!("Random spell: '{spell}'").green().bold());
         render::object(spell, &cli.color);
         return;
     }

@@ -1,12 +1,9 @@
-//! Output layer: color, terminal fitting and the timing readout.
-
 use crate::fit;
 use crate::pipeline::{self, Source};
 use colored::Colorize;
 use figlet_rs::FIGfont;
 use std::time::Duration;
 
-/// Render object art (`runix <word> -a`).
 pub fn object(word: &str, color: &str) {
     match pipeline::object(word) {
         Ok(spell) => {
@@ -20,8 +17,6 @@ pub fn object(word: &str, color: &str) {
     }
 }
 
-/// Render big letter art (`runix <word>`).
-/// Words wider than the screen are stacked in chunks that always fit.
 pub fn word(text: &str) {
     let font = FIGfont::standard().expect("built-in standard font always loads");
     let figure = match font.convert(text) {
@@ -86,7 +81,6 @@ fn paint(art: &str, color: &str) -> String {
     }
 }
 
-/// `⚡ 1.24s · ai` — watch the response time shrink with every cache hit.
 fn report(elapsed: Duration, source: Source) {
     println!(
         "{}",
