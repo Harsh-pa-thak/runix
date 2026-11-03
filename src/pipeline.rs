@@ -1,7 +1,3 @@
-//! The lookup pipeline every spell travels through:
-//! built-in library → local cache → shared cache → AI.
-//! The AI only ever runs when every cache layer misses.
-
 use indicatif::{ProgressBar, ProgressStyle};
 use std::time::{Duration, Instant};
 
@@ -30,7 +26,6 @@ pub struct Spell {
     pub elapsed: Duration,
 }
 
-/// Fetch object art through the layer pipeline.
 pub fn object(word: &str) -> anyhow::Result<Spell> {
     let start = Instant::now();
     let word = word.trim().to_lowercase();
@@ -56,8 +51,7 @@ pub fn object(word: &str) -> anyhow::Result<Spell> {
             elapsed: start.elapsed(),
         });
     }
-
-    // Last resort: the AI. Show a live loading screen while it works.
+    
     let spinner = start_spinner(&word);
     let generated = crate::ai::generate(&word);
     spinner.finish_and_clear();
@@ -71,7 +65,6 @@ pub fn object(word: &str) -> anyhow::Result<Spell> {
     })
 }
 
-/// Fast, live loading screen shown only while the AI is working.
 fn start_spinner(word: &str) -> ProgressBar {
     let spinner = ProgressBar::new_spinner();
     spinner.set_style(

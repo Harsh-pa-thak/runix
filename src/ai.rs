@@ -1,16 +1,11 @@
-//! AI fallback (Layer 4): Groq chat completions, tuned for minimum latency.
-
 use anyhow::bail;
 use serde_json::json;
 use std::time::Duration;
 
-/// `openai/gpt-oss-20b` is Groq's fastest production model (~1000 tok/s).
-/// `reasoning_effort: low` is the key to fast art: at the default effort the
-/// model burns its whole token budget reasoning and often returns nothing.
 const MODEL: &str = "openai/gpt-oss-20b";
 const REASONING_EFFORT: &str = "low";
 
-/// Art is capped at ~14 lines x ~60 columns, so 700 tokens is generous headroom.
+
 const MAX_COMPLETION_TOKENS: u32 = 700;
 
 const TIMEOUT: Duration = Duration::from_secs(10);
@@ -23,8 +18,6 @@ pub fn generate(word: &str) -> anyhow::Result<String> {
              then run: runix --set-key <YOUR_GROQ_KEY>"
         )
     })?;
-
-    // Ask the AI for art that fits the current terminal.
     let width = crate::fit::art_width_budget();
     let height = crate::fit::art_height_budget();
 
@@ -82,8 +75,6 @@ pub fn generate(word: &str) -> anyhow::Result<String> {
     Ok(art)
 }
 
-/// Strips accidental code fences, drops non-ASCII lines, trims blank edges
-/// and caps the result to the terminal height budget.
 fn clean_ascii_art(raw: &str, max_lines: usize) -> String {
     let mut s = raw.trim();
     if let Some(rest) = s.strip_prefix("```") {
