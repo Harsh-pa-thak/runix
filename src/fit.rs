@@ -31,7 +31,7 @@ pub fn art_height_budget() -> usize {
 }
 
 pub fn shrink_to_terminal(art: &str) -> String {
-    let budget = terminal_width().saturating_sub(1).max(4);
+    let budget = terminal_width().min(DEFAULT_WIDTH).saturating_sub(1).max(4);
 
     let mut lines: Vec<String> = art.lines().map(|line| line.trim_end().to_string()).collect();
     while max_line_width(&lines.join("\n")) > budget {
